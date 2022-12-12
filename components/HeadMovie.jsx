@@ -7,12 +7,20 @@ import { Context } from "../Context/Context";
 
 const HeadMovie = ({ MovieInfo, index, navigation }) => {
   const idse = 736526;
-  const { singleMovie, setSingleMovie } = useContext(Context);
+  const {
+    singleMovie,
+    setSingleMovie,
+    savedMovie,
+    setSavedMovie,
+    savedIds,
+    setSavedIds,
+  } = useContext(Context);
+  const addMovie = async (data) => {};
   return (
     <TouchableOpacity
       onPress={() => {
         setSingleMovie(MovieInfo);
-        navigation.navigate("Details")
+        navigation.navigate("Details");
       }}
     >
       <View
@@ -31,9 +39,11 @@ const HeadMovie = ({ MovieInfo, index, navigation }) => {
           }}
           onPress={() => {
             console.log(MovieInfo?.id);
+            setSavedMovie([...savedMovie, MovieInfo]);
+            setSavedIds([...savedIds, MovieInfo?.id]);
           }}
         >
-          {MovieInfo?.id === idse ? (
+          {savedIds.find((item) => item == MovieInfo?.id) ? (
             <Heart fill={"#FF8700"} />
           ) : (
             <Heart fill={"#fff"} />

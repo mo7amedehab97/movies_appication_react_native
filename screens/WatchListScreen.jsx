@@ -11,10 +11,8 @@ import BackIcon from "../assets/images/arrow-left.svg";
 import { Footer, MovieItem } from "../components";
 import { Context } from "../Context/Context";
 
-
 const WatchListScreen = ({ navigation }) => {
-  const { setStatus } = useContext(Context);
-
+  const { setStatus, savedMovie, category } = useContext(Context);
 
   return (
     <SafeAreaView
@@ -64,24 +62,12 @@ const WatchListScreen = ({ navigation }) => {
       >
         <FlatList
           showsVerticalScrollIndicator={false}
-          data={[
-            { key: "Devin" },
-            { key: "Dan" },
-            { key: "Dominic" },
-            { key: "Jackson" },
-            { key: "James" },
-            { key: "Joel" },
-            { key: "John" },
-            { key: "dfsd" },
-            { key: "3" },
-            { key: "fdfg" },
-            { key: "fdsf" },
-            { key: "sfdfsa" },
-            { key: "Jillian" },
-            { key: "Jimmy" },
-            { key: "Julie" },
-          ]}
-          renderItem={({ item }) => <MovieItem />}
+          data={savedMovie.filter(
+            (v, i, a) => a.findIndex((v2) => v2.id === v.id) === i
+          )}
+          renderItem={({ item }) => (
+            <MovieItem MovieInfo={item} category={category} />
+          )}
         />
       </View>
       <Footer navigation={navigation} />

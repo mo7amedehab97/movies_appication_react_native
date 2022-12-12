@@ -5,7 +5,8 @@ import { primaryColor } from "../assets/Colors";
 import Heart from "../assets/images/heart.svg";
 import { Context } from "../Context/Context";
 const MoreMovies = ({ MovieInfo, navigation }) => {
-  const { setSingleMovie } = useContext(Context);
+  const { setSingleMovie, savedMovie, setSavedMovie, savedIds, setSavedIds } =
+    useContext(Context);
   return (
     <TouchableOpacity
       onPress={() => {
@@ -41,10 +42,11 @@ const MoreMovies = ({ MovieInfo, navigation }) => {
             zIndex: 2,
           }}
           onPress={() => {
-            console.log(MovieInfo?.id);
+            setSavedMovie([...savedMovie, MovieInfo]);
+            setSavedIds([...savedIds, MovieInfo?.id]);
           }}
         >
-          {MovieInfo?.id === 123435 ? (
+          {savedIds.find((item) => item == MovieInfo?.id) ? (
             <Heart fill={"#FF8700"} />
           ) : (
             <Heart fill={"#fff"} />
