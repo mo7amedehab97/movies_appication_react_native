@@ -7,6 +7,7 @@ import {
   HomeScreen,
   WatchListScreen,
   SearchScreen,
+  SplashScreen,
 } from "./screens";
 import { ContextProvider } from "./Context/Context";
 
@@ -33,6 +34,7 @@ export default function App() {
       <NavigationContainer>
         <StatusBar style="light" />
         <Stack.Navigator screenOptions={{ headerShown: false }}>
+          <Stack.Screen name="Splash" component={SplashScreen} />
           <Stack.Screen name="Home" component={HomeScreen} />
           <Stack.Screen name="Details" component={DetailsScreen} />
           <Stack.Screen name="WatchList" component={WatchListScreen} />

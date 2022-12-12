@@ -14,7 +14,7 @@ import { Context } from "../Context/Context";
 import NoResults from "../assets/images/no-results 1.svg";
 const SearchScreen = ({ navigation }) => {
   const { setStatus, searchResult, category } = useContext(Context);
-
+  console.log(searchResult);
   return (
     <SafeAreaView
       style={{
@@ -62,7 +62,7 @@ const SearchScreen = ({ navigation }) => {
       </View>
       <SearchInput navigation={navigation} />
 
-      {searchResult?.total_results !== 0 ? (
+      {searchResult?.success !== false ? (
         <View
           style={{
             width: "100%",
