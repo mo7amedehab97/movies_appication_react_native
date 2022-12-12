@@ -75,7 +75,7 @@ const HomeScreen = ({ navigation }) => {
           showsHorizontalScrollIndicator={false}
           data={data.results}
           renderItem={({ item, index }) => (
-            <HeadMovie MovieInfo={item} index={index} />
+            <HeadMovie MovieInfo={item} index={index} navigation={navigation} />
           )}
         />
       </View>
@@ -104,7 +104,9 @@ const HomeScreen = ({ navigation }) => {
           numColumns={3}
           showsVerticalScrollIndicator={false}
           data={genreMovie.results}
-          renderItem={({ item }) => <MoreMovies MovieInfo={item} />}
+          renderItem={({ item }) => (
+            <MoreMovies navigation={navigation} MovieInfo={item} />
+          )}
           style={{
             height: "32%",
           }}

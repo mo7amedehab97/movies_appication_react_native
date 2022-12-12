@@ -6,7 +6,7 @@ import {
   StyleSheet,
   TouchableOpacity,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { primaryColor } from "../assets/Colors";
 import BackIcon from "../assets/images/arrow-left.svg";
 import SavedMoveis from "../assets/images/Save 1.svg";
@@ -15,8 +15,14 @@ import Calender from "../assets/images/CalendarBlank.svg";
 import Clock from "../assets/images/Clock.svg";
 import Ticket from "../assets/images/Ticket.svg";
 import { Reviews, AboutMovie, Cast } from "../components";
-const DetailsScreen = () => {
-  const [status, setStatus] = useState("about movie");
+import { Context } from "../Context/Context";
+import { imageBaseUrl } from "../assets/Config";
+const DetailsScreen = ({ navigation }) => {
+  const { status, setStatus, singleMovie, category } = useContext(Context);
+  const [detailsStatus, setDetailsStatus] = useState("about movie");
+  const IDS = singleMovie?.genre_ids[0];
+  const catName = category?.genres.filter(({ id }) => id === IDS);
+  const name = { ...catName };
   return (
     <SafeAreaView
       style={{
@@ -34,7 +40,15 @@ const DetailsScreen = () => {
           alignItems: "center",
         }}
       >
-        <BackIcon width={24} height={24} />
+        <TouchableOpacity
+          onPress={() => {
+            navigation.navigate("Home");
+            setStatus("Home");
+          }}
+        >
+          <BackIcon width={24} height={24} />
+        </TouchableOpacity>
+
         <Text
           style={{
             color: "#ececec",
@@ -45,7 +59,14 @@ const DetailsScreen = () => {
         >
           Details
         </Text>
-        <SavedMoveis width={24} height={24} fill={"#EEE"} />
+        <TouchableOpacity
+          onPress={() => {
+            navigation.navigate("WatchList");
+            setStatus("WatchLater");
+          }}
+        >
+          <SavedMoveis width={24} height={24} fill={"#EEE"} />
+        </TouchableOpacity>
       </View>
       <View
         style={{
@@ -59,10 +80,15 @@ const DetailsScreen = () => {
         }}
       >
         <Image
-          source={require("../assets/images/trailer.png")}
-          resizeMode="stretch"
+          source={{
+            uri: `${imageBaseUrl}${singleMovie?.backdrop_path}`,
+          }}
+          resizeMode="cover"
           style={{
             width: "100%",
+            height: 210,
+            borderBottomLeftRadius: 16,
+            borderBottomRightRadius: 16,
           }}
         />
 
@@ -77,7 +103,9 @@ const DetailsScreen = () => {
           }}
         >
           <Image
-            source={require("../assets/images/trailer.png")}
+            source={{
+              uri: `${imageBaseUrl}${singleMovie?.poster_path}`,
+            }}
             resizeMode="cover"
             style={{
               width: 95,
@@ -96,7 +124,7 @@ const DetailsScreen = () => {
               textTransform: "capitalize",
             }}
           >
-            Spider man no way to home
+            {singleMovie?.title}
           </Text>
         </View>
         <View
@@ -124,7 +152,7 @@ const DetailsScreen = () => {
               paddingLeft: 6,
             }}
           >
-            9.3
+            {singleMovie?.vote_average}
           </Text>
         </View>
       </View>
@@ -150,7 +178,9 @@ const DetailsScreen = () => {
           }}
         >
           <Calender width={24} height={24} />
-          <Text style={styles.textInfo}>2021</Text>
+          <Text style={styles.textInfo}>
+            {singleMovie?.release_date?.split("-")[0]}
+          </Text>
         </View>
         <View
           style={{
@@ -166,7 +196,10 @@ const DetailsScreen = () => {
 
         <View style={styles.infoHolder}>
           <Ticket width={24} height={24} />
-          <Text style={styles.textInfo}>Action</Text>
+          <Text style={styles.textInfo}>
+            {" "}
+            {name?.[0]?.name === undefined ? "UnRegistered" : name?.[0]?.name}
+          </Text>
         </View>
       </View>
       <View
@@ -182,9 +215,9 @@ const DetailsScreen = () => {
           <Text
             style={{
               ...styles.detailsListItem,
-              borderBottomWidth: status === "about movie" ? 4 : 0,
+              borderBottomWidth: detailsStatus === "about movie" ? 4 : 0,
               borderBottomColor:
-                status === "about movie" ? "#3A3F47" : "transparent",
+                detailsStatus === "about movie" ? "#3A3F47" : "transparent",
             }}
           >
             About Movie
@@ -194,9 +227,9 @@ const DetailsScreen = () => {
           <Text
             style={{
               ...styles.detailsListItem,
-              borderBottomWidth: status === "reviews" ? 4 : 0,
+              borderBottomWidth: detailsStatus === "reviews" ? 4 : 0,
               borderBottomColor:
-                status === "reviews" ? "#3A3F47" : "transparent",
+                detailsStatus === "reviews" ? "#3A3F47" : "transparent",
             }}
           >
             Reviews
@@ -206,8 +239,9 @@ const DetailsScreen = () => {
           <Text
             style={{
               ...styles.detailsListItem,
-              borderBottomWidth: status === "cast" ? 4 : 0,
-              borderBottomColor: status === "cast" ? "#3A3F47" : "transparent",
+              borderBottomWidth: detailsStatus === "cast" ? 4 : 0,
+              borderBottomColor:
+                detailsStatus === "cast" ? "#3A3F47" : "transparent",
             }}
           >
             Cast
@@ -222,13 +256,9 @@ const DetailsScreen = () => {
           justifyContent: "space-between",
         }}
       >
-        {status === "about movie" ? (
-          <AboutMovie
-            description={
-              "From DC Comics comes the Suicide Squad, an antihero team of incarcerated supervillains who act as deniable assets for the United States government, undertaking high-risk black ops missions in exchange for commuted prison sentences."
-            }
-          />
-        ) : status === "reviews" ? (
+        {detailsStatus === "about movie" ? (
+          <AboutMovie description={singleMovie?.overview} />
+        ) : detailsStatus === "reviews" ? (
           <Reviews />
         ) : (
           <Cast />

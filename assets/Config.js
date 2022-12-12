@@ -1,21 +1,12 @@
 import * as SQLite from "expo-sqlite";
+import React from "react";
 
-const db = SQLite.openDatabase(
-  {
-    name: "SavedMovies",
-    location: "default",
-  },
-  () => {},
-  (error) => {
-    console.log(error);
-  }
-);
+const db = SQLite.openDatabase("db.Atfal");
+
 const createTable = async () => {
-  await db.transaction(async (tx) => {
-    await tx.executeSql(
-      "CREATE TABLE IF NOT EXISTS " +
-        "Movies " +
-        "(ID INTEGER PRIMARY KEY AUTOINCREMENT, Image TEXT, Title TEXT, Rate TEXT, Genre_id Text, Description TEXT)"
+  db.transaction((tx) => {
+    tx.executeSql(
+      "create table if not exists items (id integer primary key not null, done int, value text);"
     );
   });
 };
@@ -35,12 +26,18 @@ const addMovie = (data) => {
   });
 };
 const getMovies = () => {
+  const [n, setn] = React.useState(0);
   db.transaction((tx) => {
-    tx.executeSql("SELECT * FROM Movies"),[],(tx,results)=>{
-      const len = results.rows.length
-    }
+    tx.executeSql("SELECT * FROM items"),
+      [],
+      (tx, results) => {
+        const len = results.rows.length;
+        setn(result);
+        console.log(results);
+      };
   });
 };
+
 const baseUrl =
   "https://api.themoviedb.org/3/movie/popular?api_key=ec1b8bb6b43b1b9440e2baff823ea37b";
 

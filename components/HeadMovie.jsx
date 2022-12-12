@@ -1,50 +1,18 @@
 import { Text, View, Image, TouchableOpacity } from "react-native";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { primaryColor } from "../assets/Colors";
 import { addMovie, createTable, db, imageBaseUrl } from "../assets/Config";
 import Heart from "../assets/images/heart.svg";
-import * as SQLite from "expo-sqlite";
+import { Context } from "../Context/Context";
 
-function openDatabase() {
-  if (Platform.OS === "web") {
-    return {
-      transaction: () => {
-        return {
-          executeSql: () => {},
-        };
-      },
-    };
-  }
-
-  const db = SQLite.openDatabase("db.Atfal");
-  return db;
-}
-
-const db = openDatabase();
-
-const HeadMovie = ({ MovieInfo, index }) => {
-  const [num, setNum] = useState(0);
-  useEffect(() => {
-    createTable();
-  }, []);
+const HeadMovie = ({ MovieInfo, index, navigation }) => {
   const idse = 736526;
-  const getMovies = () => {
-    db.transaction((tx) => {
-      tx.executeSql("SELECT * FROM Movies"),
-        [],
-        (tx, results) => {
-          const len = results.rows.length;
-          console.log(tx);
-          setNum(len);
-        };
-    });
-  };
-  console.log(num);
+  const { singleMovie, setSingleMovie } = useContext(Context);
   return (
     <TouchableOpacity
       onPress={() => {
-        addMovie(MovieInfo);
-        getMovies()
+        setSingleMovie(MovieInfo);
+        navigation.navigate("Details")
       }}
     >
       <View

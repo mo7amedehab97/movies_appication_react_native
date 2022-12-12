@@ -9,6 +9,7 @@ function ContextProvider({ children }) {
   const [genreName, setGenreName] = useState("Action");
   const [searchResult, setSearchResult] = useState([]);
   const [searchWord, setSearchWord] = useState([]);
+  const [singleMovie, setSingleMovie] = useState([]);
   return (
     <Context.Provider
       value={{
@@ -28,6 +29,8 @@ function ContextProvider({ children }) {
         setSearchResult,
         searchWord,
         setSearchWord,
+        singleMovie,
+        setSingleMovie,
       }}
     >
       {children}
